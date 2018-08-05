@@ -1,0 +1,98 @@
+
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>口令</title>
+        <meta charset="UTF-8">
+        <!-- <meta name="viewport" content="width=device-width, initial-scale=1.0"> -->
+        <style type="text/css">
+            *{margin:0;padding:0;}
+            html{background:#fff;color:#555;font-size:14px;font-family:"Microsoft Yahei",Tahoma,Arial,Helvetica,STHeiti;}
+            #container{display:block;margin:0 auto;background:url("bg.png") top center no-repeat;background-size:100%;}
+            #tip{display:block;padding:20px 20px 0;color:#fff;line-height:200%;font-size:24px;}
+            #content{padding:400px 0 0;text-align:center;}
+            #token{display:block;margin:0 auto;padding:0;width:90%;height:100px;border:none;font-size:64px;font-weight:bold;color:#333;text-align:center;padding-top: 20px;}
+            #copy,#link{display:inline-block;width:80%;height:120px;line-height:120px;margin:20px 10px;border-radius:80px;border:#2466f4 1px solid;color:#2466f4;cursor:pointer;margin-top:20px;font-size:48px;}
+            #copy{background:#2466f4;color:#fff;}
+            .b{display:inline-block;;border:#2466f4 2px solid;width:90%;text-align: center;margin-bottom:40px;}
+            .t{display:inline-block;width:50%;margin:-18px;background-color:#2466f4;font-size:24px;line-height:36px;padding:10px;text-align: center;color:#fff;height: 36px;}
+        </style>
+    </head>
+    <body>        <div id="container">
+            <div id="tip">点击右上角从浏览器打开<br>可以继续浏览并购买哦</div>
+            <div id="content"><div class="b"><div class="t">如果一键复制失败，请长按手动全选复制</div><br><br><div id="token" name="token">￥￥ </div><br><br></div></div>
+            <script type="text/javascript" src="./library-min.js"></script>
+            <!-- <script src="./taobao.js"></script> -->
+            <script type="text/javascript">
+
+              var token = $.param('taowords'), link = $.param('url'), ptitle = $.param('ptitle');
+                //   var token = '', link = '';
+                if(ptitle)$('title').text(ptitle)
+
+                //var ua = window.navigator.userAgent.toLowerCase();
+                var ua = 'Mozilla/5.0 (iPhone; CPU iPhone OS 5_1 like Mac OS X) AppleWebKit/534.46 (KHTML, like Gecko) Mobile/9B176 MicroMessenger/4.3.2'
+
+                if (ua.match(/MicroMessenger/i) != 'micromessenger' && link != "null" && link!="") {
+                    window.wakeup && window.wakeup(link);
+                }
+
+
+                $.ready(function () {
+
+                    if (token) {
+
+                        $('#tip').text('一键复制并打开手机淘宝\n或点击右上从浏览器打开');
+                    //var $token = $('<div class="b"><div class="t">如果一键复制失败，请长按手动全选复制</div><br><br><div id="token" name="token">你好 ￥' + token + '￥ hello</div><br><br></div>').appendTo('#content');
+                     $('#token').text('￥'+ token + '￥')
+
+                      //  var ua = navigator.userAgent.toLowerCase();
+                        var show_copy = true;
+                        if(ua.match(/iphone/i) == "iphone"||true){
+                            var iphoneInfo = ua.match(/iphone os (\d{1,})/i);
+                            var iosVersion = iphoneInfo[1];
+                            if(iosVersion >= 10 || ua.match(/ipad/i) == 'ipad') {
+                               show_copy = true;
+                            } else{
+                                show_copy = false;
+                            }
+                        } else {
+                           show_copy = true;
+                        }
+                        var show_copy = true;
+                        // if (window.Clipboard && Clipboard.isSupported()) {
+                        if(show_copy==true){
+                            var $copy = $('<span id="copy">一键复制</span>').appendTo('#content');
+                            new Clipboard($copy[0], {
+                                text: function () {
+                                    return $("#token").html() || '';
+                                }
+                            }).on('success', function (e) {
+                                e.clearSelection();
+                                $copy.text('已复制！');
+                                setTimeout(function () {
+                                    $copy.text('一键复制');
+                                }, 1000);
+                            }).on('error', function (e) {
+                                e.clearSelection();
+                                $copy.text('复制失败，请长按');
+                            });
+                        }
+                    }
+
+                    var s_token = document.querySelector('#token');
+                    var s_content = document.querySelector('#content');
+                    var s_copy = document.querySelector('#copy');
+
+                    document.addEventListener("selectionchange",
+                    function(e) {
+                        window.getSelection().selectAllChildren(s_token);
+                        // s_token.clearSelection();
+                        // window.getSelection().selectAllChildren(s_token);
+                    },
+                    false);
+
+                });
+            </script>
+        </div>
+    </body>
+</html>
